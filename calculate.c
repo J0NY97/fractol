@@ -81,9 +81,9 @@ void	calculate(t_fractol *fractol)
         	complex.im = IM_START + ((float)y / fractol->win_info.height) * (IM_END - IM_START);
 			if (fractol->toggle_mandelbrot)
 				value = calculate_mandelbrot(fractol, complex);
-			color[0] = 255 - (int)(value * 255 / fractol->max_iteration);
-			color[1] = 255 - (int)(value * 255 / fractol->max_iteration);
-			color[2] = 255 - (int)(value * 255 / fractol->max_iteration);
+			color[0] = fractol->r - (int)(value * fractol->opacity / fractol->max_iteration);
+			color[1] = fractol->g - (int)(value * fractol->opacity / fractol->max_iteration);
+			color[2] = fractol->b - (int)(value * fractol->opacity / fractol->max_iteration);
         	set_pixel(fractol, x, y, color);
 			y++;
 		}

@@ -45,7 +45,11 @@ void	init(t_fractol *fractol)
 	fractol->win_info.height = 400;
 	fractol->win_info.title = ft_strdup("fractol");
 
-	fractol->max_iteration = 100;
+	fractol->max_iteration = 50;
+	fractol->opacity = 255;
+	fractol->r = 255;
+	fractol->g = 255;
+	fractol->b = 255;
 
 	fractol->mlx = mlx_init();
 	fractol->win = mlx_new_window(fractol->mlx, fractol->win_info.width, fractol->win_info.height, fractol->win_info.title);

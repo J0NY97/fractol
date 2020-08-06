@@ -45,6 +45,10 @@ typedef struct	s_fractol
 	int			endian;
 
 	int			max_iteration;
+	int			opacity;
+	int			r;
+	int			g;
+	int			b;
 
 	int			toggle_julia;
 	int			toggle_mandelbrot;
