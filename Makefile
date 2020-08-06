@@ -11,7 +11,9 @@
 # **************************************************************************** #
 
 NAME = fractol
-SRCS = ./main.c
+SRCS = ./main.c\
+		./input.c\
+		./calculate.c
 OBJS = ./*.o
 LIBS = ./libft/libft.a
 MINI = -lmlx -framework OpenGL -framework AppKit
