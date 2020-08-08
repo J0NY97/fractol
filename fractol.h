@@ -19,8 +19,8 @@
 
 typedef struct s_complex
 {
-	double		re;
-	double		im;
+	float		re;
+	float		im;
 }				t_complex;
 
 
@@ -45,18 +45,33 @@ typedef struct	s_fractol
 	int			endian;
 
 	int			max_iteration;
-	int			opacity;
+
+	// color modifiers
+	unsigned int	hue;
+	unsigned int	saturation;
+	unsigned int	color_value;
+
+// remove these if never used
 	int			r;
 	int			g;
 	int			b;
+
+	// not actually zoom, change these to something else
+	float		zoom_re;
+	float		zoom_im;
+
+	float		re_start;
+	float		re_end;
+	float		im_start;
+	float		im_end;
 
 	int			toggle_julia;
 	int			toggle_mandelbrot;
 	int			toggle_own;
 }				t_fractol;
 
+void			ft_error(char *msg);
 int				input(int keycode, t_fractol *fractol);
 void			calculate(t_fractol *fractol);
-void			filled_rect(t_fractol *info, int x, int y, int w, int h);
 
 #endif
