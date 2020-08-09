@@ -147,7 +147,7 @@ void	*calculate(void *thingelithong)
 	complex = set_complex(fractol->zoom_re, fractol->zoom_im);
 	while (x < fractol->win_info.width)
 	{
-		y = 0;
+		y = fractol->calc_info.start_y;
 		while (y < fractol->calc_info.max_height)
 		{
 			begin.re =

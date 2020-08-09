@@ -48,8 +48,8 @@ void	init(t_fractol *fractol)
 {
 	fractol->thread_amount = 8;
 	fractol->run = 1;
-	fractol->win_info.width = 600;
-	fractol->win_info.height = 400;
+	fractol->win_info.width = 1080;
+	fractol->win_info.height = 720;
 	fractol->win_info.title = ft_strdup("fractol"); // this could be moved in the the new window thing so we dont have to worry about this char *
 
 	fractol->max_iteration = 50;
@@ -102,20 +102,20 @@ int		main_loop(t_fractol *fractol)
 	pthread_t	threads[fractol->thread_amount];
 	t_fractol	fractol_copy[fractol->thread_amount];
 
-	// i = 0;
-	// while (i < fractol->thread_amount)
-	// {
-	// 	ft_memcpy(&fractol_copy[i], fractol, sizeof(t_fractol));
-	// 	fractol_copy[i].calc_info.start_y = i * (fractol->win_info.height / fractol->thread_amount);
-	// 	fractol_copy[i].calc_info.max_height = fractol_copy[i].calc_info.start_y + (fractol->win_info.height / fractol->thread_amount);
-	// 	if (pthread_create(&threads[i], NULL, calculate, &fractol_copy[i]) != 0)
-	// 		ft_error("Couldnt create thread.");
-	//  	pthread_join(threads[i], NULL);
-	// 	i++;
-	// }
-	fractol->calc_info.start_y = 0;
-	fractol->calc_info.max_height = fractol->win_info.height;
-	calculate(fractol);
+	i = 0;
+	while (i < fractol->thread_amount)
+	{
+		ft_memcpy(&fractol_copy[i], fractol, sizeof(t_fractol));
+		fractol_copy[i].calc_info.start_y = i * (fractol->win_info.height / fractol->thread_amount);
+		fractol_copy[i].calc_info.max_height = fractol_copy[i].calc_info.start_y + (fractol->win_info.height / fractol->thread_amount);
+		if (pthread_create(&threads[i], NULL, calculate, &fractol_copy[i]) != 0)
+			ft_error("Couldnt create thread.");
+	 	pthread_join(threads[i], NULL);
+		i++;
+	}
+	// fractol->calc_info.start_y = 0;
+	// fractol->calc_info.max_height = fractol->win_info.height;
+	// calculate(fractol);
 
 	mlx_put_image_to_window(fractol->mlx, fractol->win, fractol->img, 0, 0);
 	return (0);
