@@ -161,6 +161,7 @@ int		calculate_newton(t_fractol *fractol, t_complex complex, t_complex begin)
     return n;
 }
 
+// @Improvement: make a "choose_fractal" function that returns the value
 void	*calculate(void *thingelithong)
 {
 	t_fractol *fractol = thingelithong;
@@ -177,8 +178,8 @@ void	*calculate(void *thingelithong)
 	while (x < fractol->win_info.width)
 	{
 		begin.re =
-				fractol->re_start + ((float)x / (float)fractol->win_info.width)
-					* (fractol->re_end - fractol->re_start);
+			fractol->re_start + ((float)x / (float)fractol->win_info.width)
+				* (fractol->re_end - fractol->re_start);
 		y = fractol->calc_info.start_y;
 		while (y < fractol->calc_info.max_height)
 		{
@@ -193,11 +194,10 @@ void	*calculate(void *thingelithong)
 				value = calculate_own(fractol, complex, begin);
 			else if (fractol->toggle_newton)
 				value = calculate_newton(fractol, complex, begin);
-			get_color(color,
-					(int)(value * fractol->hue / fractol->max_iteration),
-					fractol->saturation,
+			get_color(color, (int)(value * fractol->hue /
+				fractol->max_iteration), fractol->saturation,
 					value < fractol->max_iteration ? fractol->color_value : 0);
-        	set_pixel(fractol, x, y, color);
+			set_pixel(fractol, x, y, color);
 			y++;
 		}
 		x++;

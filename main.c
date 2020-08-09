@@ -132,7 +132,6 @@ int		main_loop(t_fractol *fractol)
 	// fractol->calc_info.start_y = 0;
 	// fractol->calc_info.max_height = fractol->win_info.height;
 	// calculate(fractol);
-
 	mlx_put_image_to_window(fractol->mlx, fractol->win, fractol->img, 0, 0);
 	return (0);
 }
@@ -142,7 +141,8 @@ int		julia_input(int x, int y, t_fractol *fractol)
 	int w;
 	int h;
 
-	if (!fractol->julia_locked && fractol->toggle_julia)
+//	if (!fractol->julia_locked && fractol->toggle_julia)
+	if (!fractol->julia_locked)
 	{
 		w = x - fractol->win_info.width / 2;
 		h = y - fractol->win_info.height / 2;
