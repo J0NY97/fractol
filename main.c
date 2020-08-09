@@ -24,7 +24,7 @@ void	ft_usage(char *prog_name)
 {
 	ft_putstr("Usage: ");
 	ft_putstr(prog_name);
-	ft_putstr(" [mandelbrot | julia | own]");
+	ft_putstr(" [mandelbrot | julia | own | newton]");
 	ft_putstr("\n");
 	exit(1);
 }
@@ -34,12 +34,15 @@ void	change_fractol_type(t_fractol *fractol, char **argv)
 	fractol->toggle_julia = 0;
 	fractol->toggle_mandelbrot = 0;
 	fractol->toggle_own = 0;
+	fractol->toggle_newton = 0;
 	if (ft_strcmp(argv[1], "julia") == 0)
 		fractol->toggle_julia = 1;
 	else if (ft_strcmp(argv[1], "mandelbrot") == 0)
 		fractol->toggle_mandelbrot = 1;
 	else if (ft_strcmp(argv[1], "own") == 0)
 		fractol->toggle_own = 1;
+	else if (ft_strcmp(argv[1], "newton") == 0)
+		fractol->toggle_newton = 1;
 	else
 		ft_usage(argv[0]);
 }
@@ -52,6 +55,7 @@ void	init(t_fractol *fractol)
 	fractol->win_info.height = 720;
 	fractol->win_info.title = ft_strdup("fractol"); // this could be moved in the the new window thing so we dont have to worry about this char *
 
+	fractol->zoom = 1;
 	fractol->max_iteration = 50;
 
 	// colors
@@ -76,6 +80,7 @@ void	init(t_fractol *fractol)
 		fractol->im_start = -1.2f;
 		fractol->im_end = 1.2f;
 
+		fractol->julia_locked = 1;
 		fractol->zoom_re = 0.285f;
 		fractol->zoom_im = 0.01f;
 	}
@@ -88,6 +93,16 @@ void	init(t_fractol *fractol)
 
 		fractol->zoom_re = 0.0f;
 		fractol->zoom_im = 0.0f;
+	}
+	else if (fractol->toggle_newton)	// test
+	{
+		fractol->re_start = -1.0f;
+		fractol->re_end = 1.0f;
+		fractol->im_start = -1.0f;
+		fractol->im_end = 1.0f;
+
+		fractol->zoom_re = 2.5f;
+		fractol->zoom_im = 0.15f;
 	}
 
 	fractol->mlx = mlx_init();
@@ -110,14 +125,78 @@ int		main_loop(t_fractol *fractol)
 		fractol_copy[i].calc_info.max_height = fractol_copy[i].calc_info.start_y + (fractol->win_info.height / fractol->thread_amount);
 		if (pthread_create(&threads[i], NULL, calculate, &fractol_copy[i]) != 0)
 			ft_error("Couldnt create thread.");
-	 	pthread_join(threads[i], NULL);
 		i++;
 	}
+	while (i--)
+		pthread_join(threads[i], NULL);
 	// fractol->calc_info.start_y = 0;
 	// fractol->calc_info.max_height = fractol->win_info.height;
 	// calculate(fractol);
 
 	mlx_put_image_to_window(fractol->mlx, fractol->win, fractol->img, 0, 0);
+	return (0);
+}
+
+int		julia_input(int x, int y, t_fractol *fractol)
+{
+	int w;
+	int h;
+
+	if (!fractol->julia_locked && fractol->toggle_julia)
+	{
+		w = x - fractol->win_info.width / 2;
+		h = y - fractol->win_info.height / 2;
+		fractol->zoom_re = w * 0.005f;
+		fractol->zoom_im = h * 0.005f;
+	}
+	main_loop(fractol);
+	return (0);
+}
+
+void	zoom(t_fractol *fractol, int x, int y, int dir)
+{
+	int w;
+	int h;
+	float speed = 1.05f;
+
+	w = x - fractol->win_info.width / 2;
+	h = y - fractol->win_info.height / 2;
+	if (dir == 1)
+	{
+		fractol->re_start /= speed;
+		fractol->re_end /= speed;
+		fractol->im_start /= speed;
+		fractol->im_end /= speed;
+	}
+	else if (dir == -1)
+	{
+		fractol->re_start *= speed;
+		fractol->re_end *= speed;
+		fractol->im_start *= speed;
+		fractol->im_end *= speed;
+	}
+}
+
+int		mouse_input(int key, int x, int y, t_fractol *fractol)
+{
+	int amount;
+
+	if (!fractol->toggle_julia || fractol->julia_locked)
+	{
+		// ft_putnbr(key);
+		// ft_putchar('\n');
+		if (key == 4) // zoom in
+		{
+			amount = 1;
+			zoom(fractol, x, y, amount);
+		}
+		else if (key == 5) // zoom out
+		{
+			amount = -1;
+			zoom(fractol, x, y, amount);
+		}
+	}
+	main_loop(fractol);
 	return (0);
 }
 
@@ -133,6 +212,8 @@ int main(int argc, char **argv)
 	init(fractol);
 	main_loop(fractol);
 	mlx_hook(fractol->win, 2, 0, input, fractol);
+	mlx_hook(fractol->win, 6, 0, julia_input, fractol);
+	mlx_hook(fractol->win, 4, 0, mouse_input, fractol);
 	mlx_loop(fractol->mlx);
 	mlx_destroy_image(fractol->mlx, fractol->img);
 	return (0);

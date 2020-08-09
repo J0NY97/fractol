@@ -21,7 +21,7 @@ MINI = -lmlx -framework OpenGL -framework AppKit
 all: $(NAME)
 
 $(NAME):
-		gcc -o $(NAME) -I ./minilibx $(SRCS) $(LIBS) -L ./minilibx $(MINI)
+		gcc -lpthread -o $(NAME) -I ./minilibx $(SRCS) $(LIBS) -L ./minilibx $(MINI)
 
 clean:
 	/bin/rm -f $(OBJS)

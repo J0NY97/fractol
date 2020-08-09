@@ -13,6 +13,7 @@
 #ifndef FRACTOL_H
 # define FRACTOL_H
 # include <stdio.h>
+# include <stdlib.h>
 # include <math.h>
 # include <pthread.h>
 # include "mlx.h"
@@ -55,15 +56,12 @@ typedef struct	s_fractol
 
 	int			max_iteration;
 
+	float		zoom;
+
 	// color modifiers
 	unsigned int	hue;
 	unsigned int	saturation;
 	unsigned int	color_value;
-
-// remove these if never used
-	int			r;
-	int			g;
-	int			b;
 
 	// not actually zoom, change these to something else
 	float		zoom_re;
@@ -74,9 +72,12 @@ typedef struct	s_fractol
 	float		im_start;
 	float		im_end;
 
+	int			julia_locked;
+
 	int			toggle_julia;
 	int			toggle_mandelbrot;
 	int			toggle_own;
+	int			toggle_newton;
 
 // thread stuff
 	int			thread_amount;

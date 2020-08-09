@@ -132,6 +132,35 @@ int		calculate_own(t_fractol *fractol, t_complex complex, t_complex begin)
     return n;
 }
 
+int		calculate_newton(t_fractol *fractol, t_complex complex, t_complex begin)
+{
+	t_complex z;
+	t_complex temp;
+	int n;
+
+	z.re = begin.re;
+	z.im = begin.im;
+	n = 0;
+	while ((z.re - begin.re) * (z.re - begin.re) +
+			(z.im - begin.im) * (z.im - begin.im) <= 99 &&
+			n < fractol->max_iteration)
+	{
+		temp.re = z.re;
+		z.re = 3 * z.re / 4 - z.re *
+			(z.re * z.re - 3 * z.im * z.im) /
+			(z.re * z.re + z.im * z.im) /
+			(z.re * z.re + z.im * z.im) /
+			(z.re * z.re + z.im * z.im) / 4;
+		z.im = 3 * z.im / 4 - z.im *
+			(z.im * z.im - 3 * temp.re * temp.re) /
+			(temp.re * temp.re + z.im * z.im) /
+			(temp.re * temp.re + z.im * z.im)/
+			(temp.re * temp.re + z.im * z.im) / 4;
+		n++;
+	}
+    return n;
+}
+
 void	*calculate(void *thingelithong)
 {
 	t_fractol *fractol = thingelithong;
@@ -147,12 +176,12 @@ void	*calculate(void *thingelithong)
 	complex = set_complex(fractol->zoom_re, fractol->zoom_im);
 	while (x < fractol->win_info.width)
 	{
+		begin.re =
+				fractol->re_start + ((float)x / (float)fractol->win_info.width)
+					* (fractol->re_end - fractol->re_start);
 		y = fractol->calc_info.start_y;
 		while (y < fractol->calc_info.max_height)
 		{
-			begin.re =
-				fractol->re_start + ((float)x / (float)fractol->win_info.width)
-					* (fractol->re_end - fractol->re_start);
 			begin.im =
 				fractol->im_start + ((float)y / (float)fractol->win_info.height)
 					* (fractol->im_end - fractol->im_start);
@@ -162,6 +191,8 @@ void	*calculate(void *thingelithong)
 				value = calculate_julia(fractol, complex, begin);
 			else if (fractol->toggle_own)
 				value = calculate_own(fractol, complex, begin);
+			else if (fractol->toggle_newton)
+				value = calculate_newton(fractol, complex, begin);
 			get_color(color,
 					(int)(value * fractol->hue / fractol->max_iteration),
 					fractol->saturation,
