@@ -49,6 +49,7 @@ void	change_fractol_type(t_fractol *fractol, char **argv)
 
 void	init(t_fractol *fractol)
 {
+	fractol->thread_amount = 8;
 	fractol->run = 1;
 	fractol->win_info.width = 600;
 	fractol->win_info.height = 400;
@@ -113,7 +114,23 @@ void	init(t_fractol *fractol)
 
 int		main_loop(t_fractol *fractol)
 {
-	calculate(fractol);
+	int i;
+	pthread_t	threads[fractol->thread_amount];
+	t_fractol	fractol_copy[fractol->thread_amount];
+
+	i = 0;
+	while (i < fractol->thread_amount)
+	{
+		ft_memcpy((void *) &fractol_copy[i], (void *) fractol, sizeof(t_fractol));
+		fractol_copy[i].calc_info.start_x = 0;
+		fractol_copy[i].calc_info.start_y = i * (fractol->win_info.height / fractol->thread_amount);
+		fractol_copy[i].calc_info.max_height = fractol_copy[i].calc_info.start_y + (fractol->win_info.height / fractol->thread_amount);
+		if (pthread_create(&threads[i], NULL, calculate, &fractol_copy[i]) != 0)
+			ft_error("Couldnt create thread.");
+	 	pthread_join(threads[i], NULL);
+		i++;
+	}
+
 	mlx_put_image_to_window(fractol->mlx, fractol->win, fractol->img, 0, 0);
 	return (0);
 }
@@ -130,7 +147,6 @@ int main(int argc, char **argv)
 	init(fractol);
 	main_loop(fractol);
 	mlx_hook(fractol->win, 2, 0, input, fractol);
-	mlx_loop_hook(fractol->mlx, main_loop, fractol);
 	mlx_loop(fractol->mlx);
 	mlx_destroy_image(fractol->mlx, fractol->img);
 	return (0);

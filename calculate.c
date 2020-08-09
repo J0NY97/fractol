@@ -131,8 +131,9 @@ int		calculate_own(t_fractol *fractol, t_complex complex, t_complex begin)
     return n;
 }
 
-void	calculate(t_fractol *fractol)
+void	*calculate(void *thingelithong)
 {
+	t_fractol *fractol = thingelithong;
 	t_complex complex;
 	t_complex begin;
 	int x;
@@ -140,13 +141,14 @@ void	calculate(t_fractol *fractol)
 	int value;
 	int color[3];
 
-	x = 0;
-	y = 0;
+	x = fractol->calc_info.start_x;
+	y = fractol->calc_info.start_y;
 	complex = set_complex(fractol->zoom_re, fractol->zoom_im);
 	while (x < fractol->win_info.width)
 	{
 		y = 0;
-		while (y < fractol->win_info.height)
+		//while (y < fractol->win_info.height)
+		while (y < fractol->calc_info.max_height)
 		{
 			begin.re =
 				fractol->re_start + ((float)x / (float)fractol->win_info.width)
@@ -169,4 +171,5 @@ void	calculate(t_fractol *fractol)
 		}
 		x++;
 	}
+	return (thingelithong);
 }

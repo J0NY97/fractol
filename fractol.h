@@ -14,6 +14,7 @@
 # define FRACTOL_H
 # include <stdio.h>
 # include <math.h>
+# include <pthread.h>
 # include "mlx.h"
 # include "libft/libft.h"
 
@@ -24,12 +25,20 @@ typedef struct s_complex
 }				t_complex;
 
 
-typedef struct	t_win_info
+typedef struct	s_win_info
 {
 	int			width;
 	int			height;
 	char		*title;
 }				t_win_info;
+
+typedef	struct	s_calc_info
+{
+	int			start_x;
+	int			start_y;
+	int			max_height;
+}				t_calc_info;
+
 
 typedef struct	s_fractol
 {
@@ -68,10 +77,15 @@ typedef struct	s_fractol
 	int			toggle_julia;
 	int			toggle_mandelbrot;
 	int			toggle_own;
+
+// thread stuff
+	int			thread_amount;
+	t_calc_info	calc_info;
 }				t_fractol;
 
 void			ft_error(char *msg);
 int				input(int keycode, t_fractol *fractol);
-void			calculate(t_fractol *fractol);
+void			*calculate(void *fractol);
+int				main_loop(t_fractol *fractol);
 
 #endif

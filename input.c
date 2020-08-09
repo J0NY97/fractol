@@ -85,5 +85,6 @@ int		input(int keycode, t_fractol *fractol)
 			fractol->max_iteration += 1;
 		}
 	}
+	main_loop(fractol);
 	return (0);
 }
