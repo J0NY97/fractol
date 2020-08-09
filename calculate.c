@@ -79,12 +79,13 @@ int		calculate_mandelbrot(t_fractol *fractol, t_complex complex, t_complex begin
 	t_complex temp;
 	int n;
 
-	z = set_complex(begin.re, begin.im);
+	z.re = begin.re;
+	z.im = begin.im;
 	n = 0;
-	while (pow(z.re, 2.0) + pow(z.im, 2.0) <= 4 && n < fractol->max_iteration)
+	while (z.re * z.re + z.im * z.im <= 4 && n < fractol->max_iteration)
 	{
 		temp.re = z.re;
-		z.re = pow(z.re, 2.0) - pow(z.im, 2.0) + begin.re;
+		z.re = z.re * z.re - z.im * z.im + begin.re;
 		z.im = 2.0 * temp.re * z.im + begin.im;
 		n++;
 	}
@@ -99,16 +100,16 @@ int		calculate_julia(t_fractol *fractol, t_complex complex, t_complex begin)
 
 	z = set_complex(begin.re, begin.im);
 	n = 0;
-    while (pow(z.re, 2.0f) + pow(z.im, 2.0f) <= 4 && n < fractol->max_iteration)
+    while (z.re * z.re + z.im * z.im <= 4 && n < fractol->max_iteration)
 	{
 		temp.re = z.re;
-		z.re = pow(z.re, 2.0) - pow(z.im, 2.0) + complex.re;
+		z.re = z.re * z.re - z.im * z.im + complex.re;
 		z.im = 2.0 * temp.re * z.im + complex.im;
         n += 1;
 	}
     if (n == fractol->max_iteration)
         return (fractol->max_iteration);
-    return (n + 1 - log(log2(pow(z.re, 2.0f) + pow(z.im, 2.0f))));
+    return (n + 1 - log(log2(z.re * z.re + z.im * z.im)));
 }
 
 int		calculate_own(t_fractol *fractol, t_complex complex, t_complex begin)
@@ -119,10 +120,10 @@ int		calculate_own(t_fractol *fractol, t_complex complex, t_complex begin)
 
 	z = set_complex(begin.re, begin.im);
 	n = 0;
-	while (pow(z.re, 2.0f) + pow(z.im, 2.0f) <= 4 && n < fractol->max_iteration)
+	while (z.re * z.re + z.im * z.im <= 4 && n < fractol->max_iteration)
 	{
 		temp.re = z.re;
-		z.re = fabs(pow(z.re, 2.0f) - pow(z.im, 2.0f) + begin.re);
+		z.re = fabs(z.re * z.re - z.im * z.im + begin.re);
 		z.im = fabs(2.0f * temp.re * z.im + begin.im);
 		n += 1;
 	}
@@ -141,13 +142,12 @@ void	*calculate(void *thingelithong)
 	int value;
 	int color[3];
 
-	x = fractol->calc_info.start_x;
+	x = 0;
 	y = fractol->calc_info.start_y;
 	complex = set_complex(fractol->zoom_re, fractol->zoom_im);
 	while (x < fractol->win_info.width)
 	{
 		y = 0;
-		//while (y < fractol->win_info.height)
 		while (y < fractol->calc_info.max_height)
 		{
 			begin.re =

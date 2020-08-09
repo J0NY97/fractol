@@ -42,9 +42,6 @@ void	change_fractol_type(t_fractol *fractol, char **argv)
 		fractol->toggle_own = 1;
 	else
 		ft_usage(argv[0]);
-	ft_putstr("Fractol type set to ");
-	ft_putstr(argv[1]);
-	ft_putstr(".\n");
 }
 
 void	init(t_fractol *fractol)
@@ -53,7 +50,7 @@ void	init(t_fractol *fractol)
 	fractol->run = 1;
 	fractol->win_info.width = 600;
 	fractol->win_info.height = 400;
-	fractol->win_info.title = "fractol"; // this could be moved in the the new window thing so we dont have to worry about this char *
+	fractol->win_info.title = ft_strdup("fractol"); // this could be moved in the the new window thing so we dont have to worry about this char *
 
 	fractol->max_iteration = 50;
 
@@ -61,9 +58,6 @@ void	init(t_fractol *fractol)
 	fractol->hue = 255;
 	fractol->saturation = 255;
 	fractol->color_value = 255;
-	fractol->r = 255;
-	fractol->g = 255;
-	fractol->b = 255;
 
 	if (fractol->toggle_mandelbrot)	// mandelbrot
 	{
@@ -84,15 +78,6 @@ void	init(t_fractol *fractol)
 
 		fractol->zoom_re = 0.285f;
 		fractol->zoom_im = 0.01f;
-
-		// fractol->zoom_re = -0.7269f;
-		// fractol->zoom_im = 0.1889f;
-
-		// fractol->zoom_re = -0.8;
-		// fractol->zoom_im = 0.156f;
-
-		// fractol->zoom_re = -0.4f;
-		// fractol->zoom_im = 0.6f;
 	}
 	else if (fractol->toggle_own)	// burning ship
 	{
@@ -109,7 +94,6 @@ void	init(t_fractol *fractol)
 	fractol->win = mlx_new_window(fractol->mlx, fractol->win_info.width, fractol->win_info.height, fractol->win_info.title);
 	fractol->img = mlx_new_image(fractol->mlx, fractol->win_info.width, fractol->win_info.height);
 	fractol->data = mlx_get_data_addr(fractol->img, &fractol->bpp, &fractol->size_line, &fractol->endian);
-	ft_putstr("Initialized.\n");
 }
 
 int		main_loop(t_fractol *fractol)
@@ -118,18 +102,20 @@ int		main_loop(t_fractol *fractol)
 	pthread_t	threads[fractol->thread_amount];
 	t_fractol	fractol_copy[fractol->thread_amount];
 
-	i = 0;
-	while (i < fractol->thread_amount)
-	{
-		ft_memcpy((void *) &fractol_copy[i], (void *) fractol, sizeof(t_fractol));
-		fractol_copy[i].calc_info.start_x = 0;
-		fractol_copy[i].calc_info.start_y = i * (fractol->win_info.height / fractol->thread_amount);
-		fractol_copy[i].calc_info.max_height = fractol_copy[i].calc_info.start_y + (fractol->win_info.height / fractol->thread_amount);
-		if (pthread_create(&threads[i], NULL, calculate, &fractol_copy[i]) != 0)
-			ft_error("Couldnt create thread.");
-	 	pthread_join(threads[i], NULL);
-		i++;
-	}
+	// i = 0;
+	// while (i < fractol->thread_amount)
+	// {
+	// 	ft_memcpy(&fractol_copy[i], fractol, sizeof(t_fractol));
+	// 	fractol_copy[i].calc_info.start_y = i * (fractol->win_info.height / fractol->thread_amount);
+	// 	fractol_copy[i].calc_info.max_height = fractol_copy[i].calc_info.start_y + (fractol->win_info.height / fractol->thread_amount);
+	// 	if (pthread_create(&threads[i], NULL, calculate, &fractol_copy[i]) != 0)
+	// 		ft_error("Couldnt create thread.");
+	//  	pthread_join(threads[i], NULL);
+	// 	i++;
+	// }
+	fractol->calc_info.start_y = 0;
+	fractol->calc_info.max_height = fractol->win_info.height;
+	calculate(fractol);
 
 	mlx_put_image_to_window(fractol->mlx, fractol->win, fractol->img, 0, 0);
 	return (0);

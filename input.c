@@ -12,6 +12,7 @@
 
 #include "fractol.h"
 
+// @Fix: max_iter cant be less than 1
 int		input(int keycode, t_fractol *fractol)
 {
 	if (keycode == 53)
@@ -73,7 +74,7 @@ int		input(int keycode, t_fractol *fractol)
 			fractol->re_start -= 0.01f;
 			fractol->re_end += 0.01f;
 
-			fractol->max_iteration -= 1;
+			fractol->max_iteration -= fractol->max_iteration - 1 > 0 ? 1 : 0;
 		}
 		else if (keycode == 69) // zoom in
 		{
