@@ -47,6 +47,7 @@ void	change_fractol_type(t_fractol *fractol, char **argv)
 		ft_usage(argv[0]);
 }
 
+// @Improvement: make function "init_fractol" that will set the default values for different fractals
 void	init(t_fractol *fractol)
 {
 	fractol->thread_amount = 8;
@@ -121,17 +122,16 @@ int		main_loop(t_fractol *fractol)
 	while (i < fractol->thread_amount)
 	{
 		ft_memcpy(&fractol_copy[i], fractol, sizeof(t_fractol));
-		fractol_copy[i].calc_info.start_y = i * (fractol->win_info.height / fractol->thread_amount);
-		fractol_copy[i].calc_info.max_height = fractol_copy[i].calc_info.start_y + (fractol->win_info.height / fractol->thread_amount);
+		fractol_copy[i].calc_info.start_y = i * (fractol->win_info.height /
+			fractol->thread_amount);
+		fractol_copy[i].calc_info.max_height = fractol_copy[i].calc_info.start_y
+			+ (fractol->win_info.height / fractol->thread_amount);
 		if (pthread_create(&threads[i], NULL, calculate, &fractol_copy[i]) != 0)
 			ft_error("Couldnt create thread.");
 		i++;
 	}
 	while (i--)
 		pthread_join(threads[i], NULL);
-	// fractol->calc_info.start_y = 0;
-	// fractol->calc_info.max_height = fractol->win_info.height;
-	// calculate(fractol);
 	mlx_put_image_to_window(fractol->mlx, fractol->win, fractol->img, 0, 0);
 	return (0);
 }
@@ -157,14 +157,15 @@ double interpolate(double start, double end, double interpolation)
     return start + ((end - start) * interpolation);
 }
 
-void	zoom(t_fractol *fractol, int x, int y)
+void	zoom(t_fractol *fractol, int x, int y, int dir)
 {
 	int w;
 	int h;
-	double speed = 1.05f;
+	double speed;
 	double mouse_re;
 	double mouse_im;
 
+	speed = dir == 1 ? 1.05f : 1.0f / 1.05f;
 	mouse_re = (double)x / ((double)fractol->win_info.width /
 		(fractol->re_end - fractol->re_start)) + fractol->re_start;
 	mouse_im = (double)y / ((double)fractol->win_info.height /
@@ -206,7 +207,8 @@ int main(int argc, char **argv)
 	init(fractol);
 	main_loop(fractol);
 	mlx_hook(fractol->win, 2, 0, input, fractol);
-	mlx_hook(fractol->win, 6, 0, julia_input, fractol);
+	if (fractol->toggle_julia)
+		mlx_hook(fractol->win, 6, 0, julia_input, fractol);
 	mlx_hook(fractol->win, 4, 0, mouse_input, fractol);
 	mlx_loop(fractol->mlx);
 	mlx_destroy_image(fractol->mlx, fractol->img);

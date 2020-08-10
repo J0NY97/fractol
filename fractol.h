@@ -88,5 +88,6 @@ void			ft_error(char *msg);
 int				input(int keycode, t_fractol *fractol);
 void			*calculate(void *fractol);
 int				main_loop(t_fractol *fractol);
+void			zoom(t_fractol *fractol, int x, int y, int dir);
 
 #endif
