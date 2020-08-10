@@ -21,8 +21,8 @@
 
 typedef struct s_complex
 {
-	float		re;
-	float		im;
+	double		re;
+	double		im;
 }				t_complex;
 
 
@@ -56,7 +56,7 @@ typedef struct	s_fractol
 
 	int			max_iteration;
 
-	float		zoom;
+	double		zoom;
 
 	// color modifiers
 	unsigned int	hue;
@@ -64,13 +64,13 @@ typedef struct	s_fractol
 	unsigned int	color_value;
 
 	// not actually zoom, change these to something else
-	float		zoom_re;
-	float		zoom_im;
+	double		zoom_re;
+	double		zoom_im;
 
-	float		re_start;
-	float		re_end;
-	float		im_start;
-	float		im_end;
+	double		re_start;
+	double		re_end;
+	double		im_start;
+	double		im_end;
 
 	int			julia_locked;
 

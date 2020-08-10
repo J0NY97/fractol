@@ -178,13 +178,13 @@ void	*calculate(void *thingelithong)
 	while (x < fractol->win_info.width)
 	{
 		begin.re =
-			fractol->re_start + ((float)x / (float)fractol->win_info.width)
+			fractol->re_start + ((double)x / (double)fractol->win_info.width)
 				* (fractol->re_end - fractol->re_start);
 		y = fractol->calc_info.start_y;
 		while (y < fractol->calc_info.max_height)
 		{
 			begin.im =
-				fractol->im_start + ((float)y / (float)fractol->win_info.height)
+				fractol->im_start + ((double)y / (double)fractol->win_info.height)
 					* (fractol->im_end - fractol->im_start);
 			if (fractol->toggle_mandelbrot)
 				value = calculate_mandelbrot(fractol, complex, begin);

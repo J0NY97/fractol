@@ -141,7 +141,6 @@ int		julia_input(int x, int y, t_fractol *fractol)
 	int w;
 	int h;
 
-//	if (!fractol->julia_locked && fractol->toggle_julia)
 	if (!fractol->julia_locked)
 	{
 		w = x - fractol->win_info.width / 2;
@@ -153,47 +152,42 @@ int		julia_input(int x, int y, t_fractol *fractol)
 	return (0);
 }
 
-void	zoom(t_fractol *fractol, int x, int y, int dir)
+double interpolate(double start, double end, double interpolation)
+{
+    return start + ((end - start) * interpolation);
+}
+
+void	zoom(t_fractol *fractol, int x, int y)
 {
 	int w;
 	int h;
-	float speed = 1.05f;
+	double speed = 1.05f;
+	double mouse_re;
+	double mouse_im;
 
-	w = x - fractol->win_info.width / 2;
-	h = y - fractol->win_info.height / 2;
-	if (dir == 1)
-	{
-		fractol->re_start /= speed;
-		fractol->re_end /= speed;
-		fractol->im_start /= speed;
-		fractol->im_end /= speed;
-	}
-	else if (dir == -1)
-	{
-		fractol->re_start *= speed;
-		fractol->re_end *= speed;
-		fractol->im_start *= speed;
-		fractol->im_end *= speed;
-	}
+	mouse_re = (double)x / ((double)fractol->win_info.width /
+		(fractol->re_end - fractol->re_start)) + fractol->re_start;
+	mouse_im = (double)y / ((double)fractol->win_info.height /
+		(fractol->im_end - fractol->im_start)) + fractol->im_start;
+	fractol->re_start = interpolate(mouse_re, fractol->re_start, 1.0 / speed);
+	fractol->re_end = interpolate(mouse_re, fractol->re_end, 1.0 / speed);
+	fractol->im_start = interpolate(mouse_im, fractol->im_start, 1.0 / speed);
+	fractol->im_end = interpolate(mouse_im, fractol->im_end, 1.0 / speed);
 }
 
 int		mouse_input(int key, int x, int y, t_fractol *fractol)
 {
-	int amount;
-
 	if (!fractol->toggle_julia || fractol->julia_locked)
 	{
-		// ft_putnbr(key);
-		// ft_putchar('\n');
 		if (key == 4) // zoom in
 		{
-			amount = 1;
-			zoom(fractol, x, y, amount);
+			fractol->zoom += 1;
+			zoom(fractol, x, y, 1);
 		}
 		else if (key == 5) // zoom out
 		{
-			amount = -1;
-			zoom(fractol, x, y, amount);
+			fractol->zoom -= 1;
+			zoom(fractol, x, y, -1);
 		}
 	}
 	main_loop(fractol);
