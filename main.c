@@ -95,7 +95,7 @@ void	init(t_fractol *fractol)
 		fractol->zoom_re = 0.0f;
 		fractol->zoom_im = 0.0f;
 	}
-	else if (fractol->toggle_newton)	// test
+	else if (fractol->toggle_newton)	// newton
 	{
 		fractol->re_start = -1.0f;
 		fractol->re_end = 1.0f;
@@ -131,7 +131,7 @@ int		main_loop(t_fractol *fractol)
 		i++;
 	}
 	while (i--)
-		pthread_join(threads[i], NULL);
+		pthread_join(threads[i], NULL);// @Note: this has to be called like this after all the threads have been made
 	mlx_put_image_to_window(fractol->mlx, fractol->win, fractol->img, 0, 0);
 	return (0);
 }
