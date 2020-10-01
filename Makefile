@@ -6,7 +6,7 @@
 #    By: jsalmi <marvin@42.fr>                      +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2020/08/06 13:02:49 by jsalmi            #+#    #+#              #
-#    Updated: 2020/10/01 11:56:42 by jsalmi           ###   ########.fr        #
+#    Updated: 2020/10/01 12:01:09 by jsalmi           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -27,7 +27,8 @@ MINI = -lmlx -framework OpenGL -framework AppKit
 all: $(NAME)
 
 $(NAME):
-		gcc -lpthread -o $(NAME) $(FLAGS) -I ./minilibx $(SRCS) $(LIBS) -L ./minilibx $(MINI)
+	make -C ./libft
+	gcc -lpthread -o $(NAME) $(FLAGS) -I ./minilibx $(SRCS) $(LIBS) -L ./minilibx $(MINI)
 
 clean:
 	/bin/rm -f $(OBJS)
