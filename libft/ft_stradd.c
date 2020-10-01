@@ -1,23 +1,31 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_strnew.c                                        :+:      :+:    :+:   */
+/*   ft_stradd.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: jsalmi <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2019/10/17 10:18:47 by jsalmi            #+#    #+#             */
-/*   Updated: 2019/11/07 12:40:22 by jsalmi           ###   ########.fr       */
+/*   Created: 2020/09/20 13:16:07 by jsalmi            #+#    #+#             */
+/*   Updated: 2020/09/24 11:47:57 by jsalmi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "./libft.h"
+#include "libft.h"
 
-char	*ft_strnew(size_t size)
+int		ft_stradd(char **dest, char *src)
 {
-	char *str;
+	char	*temp;
 
-	if (!(str = (char *)malloc(sizeof(char) * (size + 1))))
+	if (!src)
 		return (0);
-	ft_memset(str, '\0', size + 1);
-	return (str);
+	if (!(*dest) || *dest == NULL)
+	{
+		*dest = ft_strdup(src);
+		return (1);
+	}
+	temp = ft_strdup(*dest);
+	ft_strdel(dest);
+	*dest = ft_strjoin(temp, src);
+	ft_strdel(&temp);
+	return (1);
 }

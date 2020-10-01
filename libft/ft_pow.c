@@ -1,23 +1,26 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_strnew.c                                        :+:      :+:    :+:   */
+/*   ft_pow.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: jsalmi <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2019/10/17 10:18:47 by jsalmi            #+#    #+#             */
-/*   Updated: 2019/11/07 12:40:22 by jsalmi           ###   ########.fr       */
+/*   Created: 2020/09/19 15:48:50 by jsalmi            #+#    #+#             */
+/*   Updated: 2020/09/19 15:57:56 by jsalmi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "./libft.h"
+#include "libft.h"
 
-char	*ft_strnew(size_t size)
+int	ft_pow(int base, int exp)
 {
-	char *str;
+	int result;
 
-	if (!(str = (char *)malloc(sizeof(char) * (size + 1))))
-		return (0);
-	ft_memset(str, '\0', size + 1);
-	return (str);
+	result = 1;
+	while (exp > 0)
+	{
+		result = result * base;
+		exp--;
+	}
+	return (result);
 }

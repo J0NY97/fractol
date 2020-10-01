@@ -1,23 +1,30 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_strnew.c                                        :+:      :+:    :+:   */
+/*   ft_strndup.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: jsalmi <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2019/10/17 10:18:47 by jsalmi            #+#    #+#             */
-/*   Updated: 2019/11/07 12:40:22 by jsalmi           ###   ########.fr       */
+/*   Created: 2020/09/17 15:47:24 by jsalmi            #+#    #+#             */
+/*   Updated: 2020/09/17 16:21:35 by jsalmi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "./libft.h"
+#include "libft.h"
 
-char	*ft_strnew(size_t size)
+char	*ft_strndup(const char *s1, size_t len)
 {
-	char *str;
+	size_t	counter;
+	char	*sdest;
 
-	if (!(str = (char *)malloc(sizeof(char) * (size + 1))))
-		return (0);
-	ft_memset(str, '\0', size + 1);
-	return (str);
+	counter = 0;
+	if (!(sdest = (char *)ft_memalloc(sizeof(char) * (len + 1))))
+		return (NULL);
+	while (s1[counter] != '\0' && counter < len)
+	{
+		sdest[counter] = s1[counter];
+		counter++;
+	}
+	sdest[counter] = '\0';
+	return (sdest);
 }

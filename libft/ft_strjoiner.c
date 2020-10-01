@@ -1,32 +1,38 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_strjoin.c                                       :+:      :+:    :+:   */
+/*   ft_strjoiner.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: nneronin <nneronin@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2019/12/04 12:27:58 by nneronin          #+#    #+#             */
-/*   Updated: 2019/12/04 12:30:08 by nneronin         ###   ########.fr       */
+/*   Created: 2020/08/30 11:15:52 by nneronin          #+#    #+#             */
+/*   Updated: 2020/10/01 11:07:36 by jsalmi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+#include <stdarg.h>
 #include "libft.h"
 
-char	*ft_strjoin(char const *s1, char const *s2)
+char	*ft_strjoiner(char *first, ...)
 {
-	char			*dest;
-	unsigned int	i;
+	char	*tmp;
+	char	*str;
+	char	*curr;
+	va_list	ap;
 
-	i = 0;
-	if (s1 == NULL || s2 == NULL)
+	if (first == NULL)
 		return (NULL);
-	dest = (char*)malloc(sizeof(*dest) * (ft_strlen(s1) + ft_strlen(s2) + 1));
-	if (dest == NULL)
-		return (NULL);
-	while (*s1 != '\0')
-		dest[i++] = *s1++;
-	while (*s2 != '\0')
-		dest[i++] = *s2++;
-	dest[i] = '\0';
-	return (dest);
+	va_start(ap, first);
+	str = ft_strdup(first);
+	curr = va_arg(ap, char *);
+	while (curr != NULL)
+	{
+		tmp = ft_strdup(str);
+		free(str);
+		str = ft_strjoin(tmp, curr);
+		free(tmp);
+		curr = va_arg(ap, char *);
+	}
+	va_end(ap);
+	return (str);
 }

@@ -1,23 +1,29 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_strnew.c                                        :+:      :+:    :+:   */
+/*   idk.c                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jsalmi <marvin@42.fr>                      +#+  +:+       +#+        */
+/*   By: nneronin <nneronin@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2019/10/17 10:18:47 by jsalmi            #+#    #+#             */
-/*   Updated: 2019/11/07 12:40:22 by jsalmi           ###   ########.fr       */
+/*   Created: 2020/08/27 16:51:09 by nneronin          #+#    #+#             */
+/*   Updated: 2020/09/17 17:03:12 by jsalmi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "./libft.h"
+#include "libft.h"
 
-char	*ft_strnew(size_t size)
+int		ft_nstrstr(char *str1, char *str2)
 {
-	char *str;
+	int i;
+	int k;
 
-	if (!(str = (char *)malloc(sizeof(char) * (size + 1))))
-		return (0);
-	ft_memset(str, '\0', size + 1);
-	return (str);
+	i = 0;
+	k = ft_strlen(str1) - ft_strlen(str2);
+	while (str1[k + i] != '\0')
+	{
+		if (str1[k + i] != str2[i])
+			return (-1);
+		i++;
+	}
+	return (0);
 }
