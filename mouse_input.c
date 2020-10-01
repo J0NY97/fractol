@@ -6,7 +6,7 @@
 /*   By: jsalmi <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/10/01 11:47:14 by jsalmi            #+#    #+#             */
-/*   Updated: 2020/10/01 11:47:42 by jsalmi           ###   ########.fr       */
+/*   Updated: 2020/10/01 12:39:28 by jsalmi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,16 +21,16 @@ int		julia_input(int x, int y, t_fractol *fractol)
 	{
 		w = x - fractol->win_info.width / 2;
 		h = y - fractol->win_info.height / 2;
-		fractol->zoom_re = w * 0.005f;
-		fractol->zoom_im = h * 0.005f;
+		fractol->extra.re = w * 0.005f;
+		fractol->extra.im = h * 0.005f;
 	}
 	main_loop(fractol);
 	return (0);
 }
 
-double interpolate(double start, double end, double interpolation)
+double	interpolate(double start, double end, double interpolation)
 {
-    return start + ((end - start) * interpolation);
+	return (start + ((end - start) * interpolation));
 }
 
 void	zoom(t_fractol *fractol, int x, int y, int dir)
@@ -41,13 +41,13 @@ void	zoom(t_fractol *fractol, int x, int y, int dir)
 
 	speed = dir == 1 ? 1.05f : 1.0f / 1.05f;
 	mouse_re = (double)x / ((double)fractol->win_info.width /
-		(fractol->re_end - fractol->re_start)) + fractol->re_start;
+		(fractol->end.re - fractol->start.re)) + fractol->start.re;
 	mouse_im = (double)y / ((double)fractol->win_info.height /
-		(fractol->im_end - fractol->im_start)) + fractol->im_start;
-	fractol->re_start = interpolate(mouse_re, fractol->re_start, 1.0 / speed);
-	fractol->re_end = interpolate(mouse_re, fractol->re_end, 1.0 / speed);
-	fractol->im_start = interpolate(mouse_im, fractol->im_start, 1.0 / speed);
-	fractol->im_end = interpolate(mouse_im, fractol->im_end, 1.0 / speed);
+		(fractol->end.im - fractol->start.im)) + fractol->start.im;
+	fractol->start.re = interpolate(mouse_re, fractol->start.re, 1.0 / speed);
+	fractol->end.re = interpolate(mouse_re, fractol->end.re, 1.0 / speed);
+	fractol->start.im = interpolate(mouse_im, fractol->start.im, 1.0 / speed);
+	fractol->end.im = interpolate(mouse_im, fractol->end.im, 1.0 / speed);
 }
 
 int		mouse_input(int key, int x, int y, t_fractol *fractol)

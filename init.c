@@ -6,7 +6,7 @@
 /*   By: jsalmi <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/10/01 11:44:24 by jsalmi            #+#    #+#             */
-/*   Updated: 2020/10/01 11:44:56 by jsalmi           ###   ########.fr       */
+/*   Updated: 2020/10/01 12:37:44 by jsalmi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,48 +24,39 @@ void	window_init(t_fractol *fractol)
 	fractol->saturation = 255;
 	fractol->color_value = 255;
 	fractol->mlx = mlx_init();
-	fractol->win = mlx_new_window(fractol->mlx, fractol->win_info.width, fractol->win_info.height, "fractol");
-	fractol->img = mlx_new_image(fractol->mlx, fractol->win_info.width, fractol->win_info.height);
-	fractol->data = mlx_get_data_addr(fractol->img, &fractol->bpp, &fractol->size_line, &fractol->endian);
+	fractol->win = mlx_new_window(fractol->mlx, fractol->win_info.width,
+			fractol->win_info.height, "fractol");
+	fractol->img = mlx_new_image(fractol->mlx,
+			fractol->win_info.width, fractol->win_info.height);
+	fractol->data = mlx_get_data_addr(fractol->img, &fractol->bpp,
+			&fractol->size_line, &fractol->endian);
 }
 
 void	default_mandelbrot(t_fractol *fractol)
 {
-	fractol->re_start = -2.0f;
-	fractol->re_end = 1.0f;
-	fractol->im_start = -1.0f;
-	fractol->im_end = 1.0f;
-	fractol->zoom_re = 0.0f;
-	fractol->zoom_im = 0.0f;
+	fractol->start = set_complex(-2.0f, -1.0f);
+	fractol->end = set_complex(1.0f, 1.0f);
+	fractol->extra = set_complex(0.0f, 0.0f);
 }
 
 void	default_julia(t_fractol *fractol)
 {
-	fractol->re_start = -1.0f;
-	fractol->re_end = 1.0f;
-	fractol->im_start = -1.2f;
-	fractol->im_end = 1.2f;
+	fractol->start = set_complex(-1.0f, -1.2f);
+	fractol->end = set_complex(1.0f, 1.2f);
+	fractol->extra = set_complex(0.285f, 0.01f);
 	fractol->julia_locked = 1;
-	fractol->zoom_re = 0.285f;
-	fractol->zoom_im = 0.01f;
 }
 
 void	default_own(t_fractol *fractol)
 {
-	fractol->re_start = -2.5f;
-	fractol->re_end = 1.0f;
-	fractol->im_start = -1.0f;
-	fractol->im_end = 1.0f;
-	fractol->zoom_re = 0.0f;
-	fractol->zoom_im = 0.0f;
+	fractol->start = set_complex(-2.5f, -1.0f);
+	fractol->end = set_complex(1.0f, 1.0f);
+	fractol->extra = set_complex(0.0f, 0.0f);
 }
 
 void	default_newton(t_fractol *fractol)
 {
-	fractol->re_start = -1.0f;
-	fractol->re_end = 1.0f;
-	fractol->im_start = -1.0f;
-	fractol->im_end = 1.0f;
-	fractol->zoom_re = 2.5f;
-	fractol->zoom_im = 0.15f;
+	fractol->start = set_complex(-1.0f, -1.0f);
+	fractol->end = set_complex(1.0f, 1.0f);
+	fractol->extra = set_complex(2.5f, 0.15f);
 }

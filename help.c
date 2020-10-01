@@ -6,13 +6,13 @@
 /*   By: jsalmi <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/10/01 11:55:52 by jsalmi            #+#    #+#             */
-/*   Updated: 2020/10/01 11:56:15 by jsalmi           ###   ########.fr       */
+/*   Updated: 2020/10/01 12:37:16 by jsalmi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "fractol.h"
 
-void	set_pixel(t_fractol *info, int x, int y, int *rgb)
+void		set_pixel(t_fractol *info, int x, int y, int *rgb)
 {
 	int i;
 
@@ -26,7 +26,8 @@ void	set_pixel(t_fractol *info, int x, int y, int *rgb)
 t_complex	set_complex(float re, float im)
 {
 	t_complex	comp;
+
 	comp.re = re;
 	comp.im = im;
-	return comp;
+	return (comp);
 }
