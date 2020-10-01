@@ -6,7 +6,7 @@
 /*   By: jsalmi <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/06 13:02:57 by jsalmi            #+#    #+#             */
-/*   Updated: 2020/08/06 13:02:58 by jsalmi           ###   ########.fr       */
+/*   Updated: 2020/10/01 11:59:01 by jsalmi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,5 +89,17 @@ int				input(int keycode, t_fractol *fractol);
 void			*calculate(void *fractol);
 int				main_loop(t_fractol *fractol);
 void			zoom(t_fractol *fractol, int x, int y, int dir);
+void			window_init(t_fractol *fractol);
+void			default_mandelbrot(t_fractol *fractol);
+void			default_julia(t_fractol *fractol);
+void			default_own(t_fractol *fractol);
+void			default_newton(t_fractol *fractol);
+void			ft_error(char *msg);
+void			ft_usage(char *prog_name);
+int				mouse_input(int key, int x, int y, t_fractol *fractol);
+int				julia_input(int x, int y, t_fractol *fractol);
+void			set_pixel(t_fractol *fractol, int x, int y, int *rgb);
+t_complex		set_complex(float re, float im);
+void			get_color(int *color, int hue, int saturation, int value);
 
 #endif

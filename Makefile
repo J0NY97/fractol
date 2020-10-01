@@ -6,22 +6,28 @@
 #    By: jsalmi <marvin@42.fr>                      +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2020/08/06 13:02:49 by jsalmi            #+#    #+#              #
-#    Updated: 2020/08/06 13:02:50 by jsalmi           ###   ########.fr        #
+#    Updated: 2020/10/01 11:56:42 by jsalmi           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 NAME = fractol
 SRCS = ./main.c\
 		./input.c\
-		./calculate.c
+		./calculate.c\
+		./init.c\
+		./mouse_input.c\
+		./error.c\
+		./help.c\
+		./color.c
 OBJS = ./*.o
 LIBS = ./libft/libft.a
+FLAGS = -Wall -Wextra -Werror
 MINI = -lmlx -framework OpenGL -framework AppKit
 
 all: $(NAME)
 
 $(NAME):
-		gcc -lpthread -o $(NAME) -I ./minilibx $(SRCS) $(LIBS) -L ./minilibx $(MINI)
+		gcc -lpthread -o $(NAME) $(FLAGS) -I ./minilibx $(SRCS) $(LIBS) -L ./minilibx $(MINI)
 
 clean:
 	/bin/rm -f $(OBJS)

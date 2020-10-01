@@ -6,74 +6,13 @@
 /*   By: jsalmi <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/06 13:02:53 by jsalmi            #+#    #+#             */
-/*   Updated: 2020/08/06 13:02:54 by jsalmi           ###   ########.fr       */
+/*   Updated: 2020/10/01 11:59:37 by jsalmi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "fractol.h"
 
-void	set_pixel(t_fractol *info, int x, int y, int *rgb)
-{
-	int i;
-
-	i = (x * info->bpp / 8) + (y * info->size_line);
-	info->data[i] = (uint8_t)rgb[0];
-	info->data[i + 1] = (uint8_t)rgb[1];
-	info->data[i + 2] = (uint8_t)rgb[2];
-	info->data[i + 3] = (uint8_t)0;
-}
-
-void	set_color(int *color, int r, int g, int b)
-{
-	color[0] = r;
-	color[1] = g;
-	color[2] = b;
-}
-
-void	get_color(int *color, int hue, int saturation, int value)
-{
-    unsigned char region;
-	unsigned char remainder;
-	unsigned char p;
-	unsigned char q;
-	unsigned char t;
-
-    if (saturation == 0)
-    {
-		set_color(color, value, value, value);
-        return ;
-    }
-
-    region = hue / 43;
-    remainder = (hue - (region * 43)) * 6;
-
-    p = (value * (255 - saturation)) >> 8;
-    q = (value * (255 - ((saturation * remainder) >> 8))) >> 8;
-    t = (value * (255 - ((saturation * (255 - remainder)) >> 8))) >> 8;
-
-    if (region == 0)
-		set_color(color, value, t, p);
-    else if (region == 1)
-		set_color(color, q, value, p);
-	else if (region == 2)
-		set_color(color, p, value, t);
-	else if (region == 3)
-		set_color(color, p, q, value);
-	else if (region == 4)
-		set_color(color, t, p, value);
-	else
-		set_color(color, value, p, q);
-}
-
-t_complex	set_complex(float re, float im)
-{
-	t_complex	complex;
-	complex.re = re;
-	complex.im = im;
-	return complex;
-}
-
-int		calculate_mandelbrot(t_fractol *fractol, t_complex complex, t_complex begin)
+int		calculate_mandelbrot(t_fractol *fractol, t_complex begin)
 {
 	t_complex z;
 	t_complex temp;
@@ -92,7 +31,7 @@ int		calculate_mandelbrot(t_fractol *fractol, t_complex complex, t_complex begin
     return n;
 }
 
-int		calculate_julia(t_fractol *fractol, t_complex complex, t_complex begin)
+int		calculate_julia(t_fractol *fractol, t_complex comp,  t_complex begin)
 {
 	t_complex z;
 	t_complex temp;
@@ -103,8 +42,8 @@ int		calculate_julia(t_fractol *fractol, t_complex complex, t_complex begin)
     while (z.re * z.re + z.im * z.im <= 4 && n < fractol->max_iteration)
 	{
 		temp.re = z.re;
-		z.re = z.re * z.re - z.im * z.im + complex.re;
-		z.im = 2.0 * temp.re * z.im + complex.im;
+		z.re = z.re * z.re - z.im * z.im + comp.re;
+		z.im = 2.0 * temp.re * z.im + comp.im;
         n += 1;
 	}
     if (n == fractol->max_iteration)
@@ -112,7 +51,7 @@ int		calculate_julia(t_fractol *fractol, t_complex complex, t_complex begin)
     return (n + 1 - log(log2(z.re * z.re + z.im * z.im)));
 }
 
-int		calculate_own(t_fractol *fractol, t_complex complex, t_complex begin)
+int		calculate_own(t_fractol *fractol, t_complex begin)
 {
 	t_complex z;
 	t_complex temp;
@@ -132,18 +71,18 @@ int		calculate_own(t_fractol *fractol, t_complex complex, t_complex begin)
     return n;
 }
 
-int		calculate_newton(t_fractol *fractol, t_complex complex, t_complex begin)
+int		calculate_newton(t_fractol *fractol, t_complex begin)
 {
-	t_complex z;
-	t_complex temp;
-	int n;
+	t_complex	z;
+	t_complex	temp;
+	int			i;
 
 	z.re = begin.re;
 	z.im = begin.im;
-	n = 0;
+	i = 0;
 	while ((z.re - begin.re) * (z.re - begin.re) +
 			(z.im - begin.im) * (z.im - begin.im) <= 99 &&
-			n < fractol->max_iteration)
+			i < fractol->max_iteration)
 	{
 		temp.re = z.re;
 		z.re = 3 * z.re / 4 - z.re *
@@ -156,16 +95,16 @@ int		calculate_newton(t_fractol *fractol, t_complex complex, t_complex begin)
 			(temp.re * temp.re + z.im * z.im) /
 			(temp.re * temp.re + z.im * z.im)/
 			(temp.re * temp.re + z.im * z.im) / 4;
-		n++;
+		i++;
 	}
-    return n;
+    return (i);
 }
 
 // @Improvement: make a "choose_fractal" function that returns the value
 void	*calculate(void *thingelithong)
 {
 	t_fractol *fractol = thingelithong;
-	t_complex complex;
+	t_complex comp;
 	t_complex begin;
 	int x;
 	int y;
@@ -174,7 +113,7 @@ void	*calculate(void *thingelithong)
 
 	x = 0;
 	y = fractol->calc_info.start_y;
-	complex = set_complex(fractol->zoom_re, fractol->zoom_im);
+	comp = set_complex(fractol->zoom_re, fractol->zoom_im);
 	while (x < fractol->win_info.width)
 	{
 		begin.re =
@@ -187,13 +126,13 @@ void	*calculate(void *thingelithong)
 				fractol->im_start + ((double)y / (double)fractol->win_info.height)
 					* (fractol->im_end - fractol->im_start);
 			if (fractol->toggle_mandelbrot)
-				value = calculate_mandelbrot(fractol, complex, begin);
+				value = calculate_mandelbrot(fractol, begin);
 			else if (fractol->toggle_julia)
-				value = calculate_julia(fractol, complex, begin);
+				value = calculate_julia(fractol, comp, begin);
 			else if (fractol->toggle_own)
-				value = calculate_own(fractol, complex, begin);
+				value = calculate_own(fractol, begin);
 			else if (fractol->toggle_newton)
-				value = calculate_newton(fractol, complex, begin);
+				value = calculate_newton(fractol, begin);
 			get_color(color, (int)(value * fractol->hue /
 				fractol->max_iteration), fractol->saturation,
 					value < fractol->max_iteration ? fractol->color_value : 0);
